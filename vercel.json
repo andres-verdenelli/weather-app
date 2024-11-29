@@ -17,18 +17,15 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "server/src/index.js"
-    },
-    {
-      "handle": "filesystem"
+      "dest": "/server/src/index.js"
     },
     {
       "src": "/assets/(.*)",
-      "dest": "client/dist/assets/$1"
+      "dest": "/client/dist/assets/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "client/dist/index.html"
+      "dest": "/client/dist/index.html"
     }
   ]
 }

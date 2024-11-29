@@ -5,8 +5,15 @@ const weatherApi = axios.create({
 })
 
 export const fetchWeatherData = async location => {
-  const { data } = await weatherApi.get('/weather', {
-    params: { location },
-  })
-  return data
+  console.log('API URL:', import.meta.env.VITE_API_URL)
+  console.log('Requesting weather for location:', location)
+  try {
+    const { data } = await weatherApi.get('/weather', {
+      params: { location },
+    })
+    return data
+  } catch (error) {
+    console.error('API Error:', error.response || error)
+    throw error
+  }
 }
