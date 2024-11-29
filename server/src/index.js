@@ -21,9 +21,14 @@ app.use(express.json())
 
 // Ruta para el pronóstico del tiempo
 app.get('/api/weather', async (req, res) => {
+  console.log('Request received:', req.query)
   const { location } = req.query
 
   try {
+    console.log(
+      'Making request to WeatherAPI with key:',
+      process.env.WEATHER_API_KEY ? 'Present' : 'Missing'
+    )
     const response = await axios.get(
       'https://api.weatherapi.com/v1/forecast.json',
       {
@@ -35,9 +40,10 @@ app.get('/api/weather', async (req, res) => {
         },
       }
     )
-
+    console.log('WeatherAPI response received')
     res.json(response.data)
   } catch (error) {
+    console.error('Error details:', error.response?.data || error.message)
     res.status(500).json({
       error:
         error.response?.data?.error?.message ||
