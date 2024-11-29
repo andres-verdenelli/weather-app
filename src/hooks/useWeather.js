@@ -18,6 +18,8 @@ export const useWeather = () => {
       setInfo(data)
     } catch (error) {
       setError(error.message)
+      console.log('Error message: ', error)
+
       setInfo(null)
     } finally {
       setIsLoading(false)
@@ -42,6 +44,7 @@ export const useWeather = () => {
           setInfo(data)
         } catch (error) {
           setError(error.message)
+          console.log('Error message: ', error)
           setInfo(null)
         } finally {
           setIsLoading(false)
@@ -49,6 +52,8 @@ export const useWeather = () => {
       },
       () => {
         setError('Unable to retrieve your location')
+        console.log('Error message: ', error)
+
         setIsLoading(false)
       }
     )
