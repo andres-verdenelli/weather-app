@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import styled from 'styled-components'
+import styled, { useTheme, css } from 'styled-components'
 import { IoLocationSharp } from 'react-icons/io5'
 import { BsClockFill } from 'react-icons/bs'
 import {
@@ -10,14 +10,42 @@ import {
   WiThermometerExterior,
   WiDayCloudyGusts,
 } from 'react-icons/wi'
+import ForecastContent from './ForecastContent'
+
+// Constantes de estilo
+const BREAKPOINTS = {
+  mobile: '320px',
+  tablet: '768px',
+  desktop: '1024px',
+}
+
+const TRANSITIONS = {
+  default: 'all 0.3s ease-in-out',
+}
+
+const cardStyles = css`
+  background: ${({ theme }) => theme.body};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 12px;
+  transition: ${TRANSITIONS.default};
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px ${({ theme }) => theme.shadow};
+    border-color: ${({ theme }) => theme.primary}33;
+  }
+`
 
 const WeatherCard = styled.div`
   background-color: ${({ theme }) => theme.card};
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 16px;
+  padding: clamp(16px, 4vw, 24px);
   box-shadow: 0 4px 6px ${({ theme }) => theme.shadow};
   color: ${({ theme }) => theme.text};
   animation: fadeIn 0.3s ease-in;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid ${({ theme }) => theme.border};
 
   @keyframes fadeIn {
     from {
@@ -36,10 +64,17 @@ const LocationHeader = styled.div`
   align-items: center;
   gap: 8px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 
   h2 {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     margin: 0;
+    line-height: 1.3;
+  }
+
+  @media (max-width: ${BREAKPOINTS.mobile}) {
+    text-align: center;
+    justify-content: center;
   }
 `
 
@@ -48,17 +83,26 @@ const MainInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  padding: 20px;
-  background: ${({ theme }) => theme.body};
-  border-radius: 12px;
+  padding: clamp(16px, 3vw, 20px);
+  ${cardStyles}
+
+  @media (max-width: ${BREAKPOINTS.mobile}) {
+    flex-direction: column;
+    gap: 16px;
+  }
 `
 
 const Temperature = styled.div`
-  font-size: 3rem;
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: bold;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: ${TRANSITIONS.default};
+
+  svg {
+    color: ${({ theme }) => theme.primary};
+  }
 `
 
 const Condition = styled.div`
@@ -68,15 +112,24 @@ const Condition = styled.div`
   gap: 8px;
 
   img {
-    width: 64px;
-    height: 64px;
+    width: clamp(48px, 8vw, 64px);
+    height: clamp(48px, 8vw, 64px);
+    transition: ${TRANSITIONS.default};
+  }
+
+  span {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    text-align: center;
   }
 `
 
 const WeatherGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(120px, 25vw, 140px), 1fr)
+  );
+  gap: clamp(12px, 2vw, 16px);
   margin-top: 20px;
 `
 
@@ -84,33 +137,34 @@ const WeatherItem = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px;
-  background: ${({ theme }) => theme.body};
-  border-radius: 8px;
+  padding: clamp(10px, 2vw, 12px);
+  ${cardStyles}
 
   svg {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     color: ${({ theme }) => theme.primary};
   }
 
   .label {
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
     color: ${({ theme }) => theme.text}aa;
   }
 
   .value {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2vw, 1.1rem);
     font-weight: 500;
   }
 `
 
 export default function WeatherContent({ info }) {
+  const theme = useTheme()
+
   return (
     <WeatherCard>
       <LocationHeader>
         <IoLocationSharp
           size={24}
-          color={({ theme }) => theme.primary}
+          style={{ color: theme.primary }}
         />
         <h2>
           {info.location.name}, {info.location.region}, {info.location.country}
@@ -181,6 +235,8 @@ export default function WeatherContent({ info }) {
           </div>
         </WeatherItem>
       </WeatherGrid>
+
+      <ForecastContent forecast={info.forecast} />
     </WeatherCard>
   )
 }

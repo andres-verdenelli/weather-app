@@ -47,7 +47,7 @@ export const useWeather = () => {
           setIsLoading(false)
         }
       },
-      error => {
+      () => {
         setError('Unable to retrieve your location')
         setIsLoading(false)
       }

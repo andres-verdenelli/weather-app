@@ -5,11 +5,12 @@ const weatherApi = axios.create({
   params: {
     key: import.meta.env.VITE_WEATHER_API,
     aqi: 'no',
+    days: 3,
   },
 })
 
 export const fetchWeatherData = async location => {
-  const { data } = await weatherApi.get('/current.json', {
+  const { data } = await weatherApi.get('/forecast.json', {
     params: { q: location },
   })
   return data

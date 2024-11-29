@@ -7,6 +7,7 @@ import LoadingSpinner from './components/LoadingSpinner'
 import WeatherContent from './components/WeatherContent'
 import ErrorMessage from './components/ErrorMessage'
 import useThemePreference from './hooks/useThemePreference'
+import { GlobalStyles } from './styles/globalStyles'
 
 const Container = styled.div`
   max-width: 600px;
@@ -22,17 +23,15 @@ const Container = styled.div`
 `
 
 export default function App() {
-  const { isDark, toggleTheme } = useThemePreference()
+  const { isDark } = useThemePreference()
   const { text, setText, info, isLoading, error, getData, getLocationWeather } =
     useWeather()
 
   return (
     <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <GlobalStyles />
       <Container>
-        <Header
-          isDark={isDark}
-          onThemeToggle={toggleTheme}
-        />
+        <Header />
         <SearchBar
           value={text}
           onChange={setText}
