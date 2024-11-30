@@ -9,26 +9,25 @@ const port = process.env.PORT || 3001
 // Middleware
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173', // URL de desarrollo
-      'https://weather-app-mu-blush-55.vercel.app', // URL de producción
-    ],
-    methods: ['GET'], // Solo permitir peticiones GET
-    credentials: true,
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://tu-dominio-en-vercel.vercel.app'
+        : 'http://localhost:5173',
   })
 )
 app.use(express.json())
 
 // Ruta para el pronóstico del tiempo
 app.get('/api/weather', async (req, res) => {
-  console.log('Request received:', req.query)
+  console.log('==== Weather API Request ====')
+  console.log('Query:', req.query)
+  console.log('Headers:', req.headers)
+  console.log('Environment:', process.env.NODE_ENV)
+  console.log('API Key present:', !!process.env.WEATHER_API_KEY)
+
   const { location } = req.query
 
   try {
-    console.log(
-      'Making request to WeatherAPI with key:',
-      process.env.WEATHER_API_KEY ? 'Present' : 'Missing'
-    )
     const response = await axios.get(
       'https://api.weatherapi.com/v1/forecast.json',
       {
@@ -40,10 +39,14 @@ app.get('/api/weather', async (req, res) => {
         },
       }
     )
-    console.log('WeatherAPI response received')
+    console.log('Weather API response successful')
     res.json(response.data)
   } catch (error) {
-    console.error('Error details:', error.response?.data || error.message)
+    console.error('Error full details:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+    })
     res.status(500).json({
       error:
         error.response?.data?.error?.message ||

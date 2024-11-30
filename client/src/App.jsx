@@ -27,6 +27,12 @@ export default function App() {
   const { text, setText, info, isLoading, error, getData, getLocationWeather } =
     useWeather()
 
+  console.log('Environment:', {
+    apiUrl: import.meta.env.VITE_API_URL,
+    mode: import.meta.env.MODE,
+    prod: import.meta.env.PROD,
+  })
+
   return (
     <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <GlobalStyles />
