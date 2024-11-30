@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api'
+const BASE_URL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:3001/api'
+    : 'https://weather-app-mu-blush-55.vercel.app/api'
 
 const weatherApi = axios.create({
   baseURL: BASE_URL,
