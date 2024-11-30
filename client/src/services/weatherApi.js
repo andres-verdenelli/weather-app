@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = import.meta.env.PROD
-  ? 'https://tu-dominio-vercel.vercel.app/api' // Usa tu dominio real de Vercel
-  : 'http://localhost:3000/api'
+const BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api'
 
 const weatherApi = axios.create({
   baseURL: BASE_URL,
