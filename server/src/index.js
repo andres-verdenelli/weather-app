@@ -9,21 +9,21 @@ const port = process.env.PORT || 3001
 // Middleware
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? 'https://tu-dominio-en-vercel.vercel.app'
-        : 'http://localhost:5173',
+    origin: [
+      'http://localhost:5173',
+      'https://weather-app-mu-blush-55.vercel.app',
+    ],
+    methods: ['GET'],
+    credentials: true,
   })
 )
 app.use(express.json())
 
 // Ruta para el pronóstico del tiempo
 app.get('/api/weather', async (req, res) => {
-  console.log('==== Weather API Request ====')
-  console.log('Query:', req.query)
-  console.log('Headers:', req.headers)
+  console.log('Request received at /api/weather')
   console.log('Environment:', process.env.NODE_ENV)
-  console.log('API Key present:', !!process.env.WEATHER_API_KEY)
+  console.log('API Key:', process.env.WEATHER_API_KEY ? 'Present' : 'Missing')
 
   const { location } = req.query
 
