@@ -6,7 +6,10 @@ require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 3001
 
-// Middleware
+// Configuración de WeatherAPI
+const WEATHER_API_KEY = process.env.WEATHER_API_KEY
+const WEATHER_API_URL = 'http://api.weatherapi.com/v1'
+
 app.use(
   cors({
     origin:
@@ -22,17 +25,41 @@ app.use(
 )
 app.use(express.json())
 
-// Ruta simplificada para prueba de conexión
+// Ruta para obtener datos del clima
 app.get('/api/weather', async (req, res) => {
-  console.log('Request received at /api/weather')
-  console.log('Query params:', req.query)
+  try {
+    console.log('Request received at /api/weather')
+    console.log('Query params:', req.query)
 
-  // Respuesta de prueba
-  res.json({
-    success: true,
-    message: 'Conexión exitosa con el backend',
-    receivedLocation: req.query.location,
-  })
+    const { location } = req.query
+    if (!location) {
+      return res.status(400).json({
+        error: 'Location parameter is required',
+      })
+    }
+
+    // Hacer la solicitud a WeatherAPI
+    const response = await axios.get(`${WEATHER_API_URL}/forecast.json`, {
+      params: {
+        key: WEATHER_API_KEY,
+        q: location,
+        days: 3, // Obtener pronóstico para 3 días
+        aqi: 'no', // No incluir datos de calidad del aire para simplificar
+      },
+    })
+
+    // Enviar la respuesta al cliente
+    res.json(response.data)
+  } catch (error) {
+    console.error(
+      'Error fetching weather data:',
+      error.response?.data || error.message
+    )
+    res.status(error.response?.status || 500).json({
+      error:
+        error.response?.data?.error?.message || 'Error fetching weather data',
+    })
+  }
 })
 
 app.listen(port, () => {
