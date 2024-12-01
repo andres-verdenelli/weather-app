@@ -22,40 +22,17 @@ app.use(
 )
 app.use(express.json())
 
-// Ruta para el pronóstico del tiempo
+// Ruta simplificada para prueba de conexión
 app.get('/api/weather', async (req, res) => {
   console.log('Request received at /api/weather')
-  console.log('Environment:', process.env.NODE_ENV)
-  console.log('API Key:', process.env.WEATHER_API_KEY ? 'Present' : 'Missing')
+  console.log('Query params:', req.query)
 
-  const { location } = req.query
-
-  try {
-    const response = await axios.get(
-      'https://api.weatherapi.com/v1/forecast.json',
-      {
-        params: {
-          key: process.env.WEATHER_API_KEY,
-          q: location,
-          days: 3,
-          aqi: 'no',
-        },
-      }
-    )
-    console.log('Weather API response successful')
-    res.json(response.data)
-  } catch (error) {
-    console.error('Error full details:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-    })
-    res.status(500).json({
-      error:
-        error.response?.data?.error?.message ||
-        'Error al obtener datos del clima',
-    })
-  }
+  // Respuesta de prueba
+  res.json({
+    success: true,
+    message: 'Conexión exitosa con el backend',
+    receivedLocation: req.query.location,
+  })
 })
 
 app.listen(port, () => {

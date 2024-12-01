@@ -10,16 +10,18 @@ export const useWeather = () => {
   const getData = async input => {
     if (!input.trim()) return
 
+    console.log('Iniciando búsqueda para:', input)
     setIsLoading(true)
     setError(null)
 
     try {
+      console.log('Haciendo petición al backend...')
       const data = await fetchWeatherData(input)
+      console.log('Respuesta del backend:', data)
       setInfo(data)
     } catch (error) {
+      console.error('Error completo:', error)
       setError(error.message)
-      console.log('Error message: ', error)
-
       setInfo(null)
     } finally {
       setIsLoading(false)
