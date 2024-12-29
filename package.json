@@ -1,20 +1,16 @@
 {
   "name": "weather-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Weather API application with React frontend and Node.js backend",
   "scripts": {
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "dev:frontend": "cd client && npm run dev",
-    "dev:backend": "cd server && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd client && npm install && npm run build",
-    "deploy": "vercel"
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
+    "build": "cd client && npm run build && cd ../server && npm install",
+    "start": "cd server && npm start",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^8.2.2"
   }
 }
