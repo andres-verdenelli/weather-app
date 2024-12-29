@@ -15,8 +15,30 @@
   ],
   "routes": [
     {
+      "src": "/api/weather",
+      "methods": ["GET", "OPTIONS"],
+      "dest": "server/server.js",
+      "headers": {
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS",
+        "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+      }
+    },
+    {
+      "src": "/api/forecast",
+      "methods": ["GET", "OPTIONS"],
+      "dest": "server/server.js",
+      "headers": {
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS",
+        "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+      }
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "server/$1"
+      "dest": "server/server.js"
     },
     {
       "src": "/(.*)",

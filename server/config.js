@@ -8,15 +8,24 @@ const config = {
   weatherApiKey: process.env.WEATHER_API_KEY,
 
   // URL base de WeatherAPI
-  weatherApiUrl: 'http://api.weatherapi.com/v1',
+  weatherApiUrl: 'https://api.weatherapi.com/v1',
 
   // Configuración de CORS
   corsOptions: {
-    origin: isDevelopment
-      ? 'http://localhost:5173' // URL del frontend en desarrollo
-      : ['https://weather-app-mu-blush-55.vercel.app', /\.vercel\.app$/], // URLs permitidas en producción
-    methods: ['GET', 'POST'],
+    origin: true, // Permite cualquier origen en producción
+    methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
+    allowedHeaders: [
+      'X-CSRF-Token',
+      'X-Requested-With',
+      'Accept',
+      'Accept-Version',
+      'Content-Length',
+      'Content-MD5',
+      'Content-Type',
+      'Date',
+      'X-Api-Version',
+    ],
   },
 }
 
