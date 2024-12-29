@@ -10,6 +10,16 @@ const app = express()
 app.use(cors(config.corsOptions))
 app.use(express.json())
 
+// Logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, {
+    query: req.query,
+    body: req.body,
+    headers: req.headers,
+  })
+  next()
+})
+
 // Health check endpoint para Vercel
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', environment: process.env.NODE_ENV || 'development' })
@@ -20,17 +30,18 @@ app.get('/api/weather', async (req, res) => {
   try {
     const { location } = req.query
 
+    console.log('Weather request received:', {
+      location,
+      apiKey: config.weatherApiKey ? 'Present' : 'Not present',
+      environment: process.env.NODE_ENV,
+    })
+
     if (!location) {
       return res.status(400).json({ error: 'Se requiere una ubicación' })
     }
 
-    console.log('Config:', {
-      apiKey: config.weatherApiKey ? 'Presente' : 'No presente',
-      apiUrl: config.weatherApiUrl,
-      environment: process.env.NODE_ENV,
-    })
-
     if (!config.weatherApiKey) {
+      console.error('API Key not configured')
       return res.status(500).json({
         error: 'Error de configuración',
         message: 'No se ha configurado la API key del servicio de clima',
@@ -78,6 +89,7 @@ app.get('/api/weather', async (req, res) => {
     console.log('Datos del clima obtenidos:', weatherData)
     res.json(weatherData)
   } catch (error) {
+    console.error('Error completo:', error)
     console.error(
       'Error al obtener el clima:',
       error.response?.data || error.message
@@ -85,6 +97,8 @@ app.get('/api/weather', async (req, res) => {
     res.status(error.response?.status || 500).json({
       error: 'Error al obtener datos del clima',
       details: error.response?.data || error.message,
+      path: req.path,
+      query: req.query,
     })
   }
 })
@@ -146,15 +160,21 @@ app.get('/api/forecast', async (req, res) => {
 
 // Manejo de errores 404
 app.use((req, res) => {
-  res.status(404).json({ error: 'Ruta no encontrada' })
+  console.log('404 Not Found:', req.path)
+  res.status(404).json({
+    error: 'Ruta no encontrada',
+    path: req.path,
+    method: req.method,
+  })
 })
 
 // Iniciar el servidor
-app.listen(config.port, () => {
+const port = process.env.PORT || 3001
+app.listen(port, () => {
   console.log(`
     🚀 Servidor iniciado
-    📍 Puerto: ${config.port}
+    📍 Puerto: ${port}
     🌍 Entorno: ${process.env.NODE_ENV || 'development'}
-    ⚡ URL: http://localhost:${config.port}
+    ⚡ URL: http://localhost:${port}
   `)
 })
