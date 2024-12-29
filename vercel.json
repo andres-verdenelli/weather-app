@@ -5,7 +5,7 @@
       "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "zeroConfig": true
+        "distDir": "dist"
       }
     },
     {
@@ -17,6 +17,10 @@
     {
       "src": "/api/(.*)",
       "dest": "server/server.js"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "client/dist/assets/$1"
     },
     {
       "handle": "filesystem"
